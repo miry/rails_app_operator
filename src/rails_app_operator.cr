@@ -316,6 +316,8 @@ def deploy(k8s : Kubernetes::Client, resource : Kubernetes::Resource(RailsApp))
       "app.kubernetes.io/created-by": "rails-app-operator",
       "app.kubernetes.io/managed-by": "rails-app-operator",
       "app.kubernetes.io/name":       entrypoint_name,
+      "app.kubernetes.io/part-of":    name,
+      "app.kubernetes.io/component":  entrypoint.name
     }
 
     info k8s.apply_deployment(
@@ -343,7 +345,7 @@ def deploy(k8s : Kubernetes::Client, resource : Kubernetes::Resource(RailsApp))
         metadata: {
           name:      entrypoint_name,
           namespace: namespace,
-          labels:    {app: name},
+          labels:    labels,
         },
         spec: {
           selector: {app: entrypoint_name},
@@ -353,11 +355,12 @@ def deploy(k8s : Kubernetes::Client, resource : Kubernetes::Resource(RailsApp))
       )
 
       if domain = entrypoint.domain
-        secret_name = "#{entrypoint_name}-tls"
+        secret_name = (domain.split(".") + ["tls"]).join("-")
         info k8s.apply_certificate(
           metadata: {
             name:      secret_name,
             namespace: namespace,
+            labels: labels
           },
           spec: {
             secretName: secret_name,
