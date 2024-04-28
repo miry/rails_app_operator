@@ -1,15 +1,57 @@
 Examples
 ========
 
-Nginx
------
-
 Create a sample Kubernetes cluster for example:
 
 ```shell
 k3d cluster create
 kubectl cluster-info
 ```
+
+Busybox
+-------
+
+Deploy a very small and primitive application:
+
+```shell
+$ kubectl apply -f busybox.yaml
+railsapp.jgaskins.dev/busybox created
+```
+
+Now you can check events, logs and created resources:
+
+```shell
+$ kubectl get events
+...
+
+$ kubectl -n rails-app-operator logs -l app=rails-app-controller
+...
+
+$ kubectl get po,deploy
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/busybox-task-548cb4dd65-xrrtd   1/1     Running   0          2m52s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/busybox-task   1/1     1            1           2m52s
+```
+
+Lets remove all created resources:
+
+```shell
+$ kubectl delete rails-app busybox
+railsapp.jgaskins.dev "busybox" deleted
+```
+
+Check again events, logs and resources:
+
+```shell
+$ kubectl get events
+$ kubectl -n rails-app-operator logs -l app=rails-app-controller
+$ kubectl get po,deploy
+```
+
+Nginx
+-----
 
 Deploy a very small and primitive web application:
 
@@ -42,7 +84,7 @@ $ kubectl get events
 Verify that everything is running:
 
 ```shell
-$ kubectl get pod,deployment,service 
+$ kubectl get pod,deployment,service
 NAME                             READY   STATUS    RESTARTS   AGE
 pod/nginx-web-7d9ccbb696-hsvv5   1/1     Running   0          2m27s
 
