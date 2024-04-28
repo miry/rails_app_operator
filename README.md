@@ -121,7 +121,12 @@ spec:
 
 ## Development
 
-TODO: Write development instructions here
+```shell
+k3d cluster create
+docker build -t jgaskins/rails-app-operator .
+kubectl delete rails-apps.jgaskins.dev --all-namespaces --all
+kubectl apply -f k8s/
+```
 
 ## Contributing
 
