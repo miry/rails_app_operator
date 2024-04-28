@@ -2,19 +2,14 @@
 apiVersion: jgaskins.dev/v1beta1
 kind: RailsApp
 metadata:
-  name: nginx
+  name: busybox
   namespace: default
 spec:
-  image: nginx
+  image: busybox
   image_pull_policy: Always
   entrypoints:
-    - name: web
-      command: [nginx, "-g", "daemon off;"]
-      port: 80
-      domain: nginx.example.com
-    - name: internal
-      command: [nginx, "-g", "daemon off;"]
-      port: 80
+    - name: task
+      command: [sh, "-c", "sleep 300"]
 
   before_create:
     command: [echo, "Creating..."]
