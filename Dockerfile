@@ -7,7 +7,7 @@ WORKDIR /build
 
 RUN shards build --release --static
 
-FROM scratch
+FROM scratch as final
 
 COPY --from=builder /build/bin/rails_app_operator /
 WORKDIR /
